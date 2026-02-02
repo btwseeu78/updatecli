@@ -26,6 +26,8 @@ type Gitlab struct {
 	Owner string `yaml:",omitempty" jsonschema:"required"`
 	// Repository specifies the name of a repository for a specific owner
 	Repository string `yaml:",omitempty" jsonschema:"required"`
+	// ProjectID allows to specify the GitLab project ID directly. If set, it takes precedence over Owner/Repository.
+	ProjectID interface{} `yaml:",omitempty"`
 }
 
 // New returns a new valid GitLab object.
@@ -85,4 +87,13 @@ func (g *Gitlab) getPID() string {
 	return strings.Join([]string{
 		g.Owner,
 		g.Repository}, "/")
+}
+
+// getProjectID returns the project identifier to use for GitLab API calls.
+// If ProjectID is set, it takes precedence over Owner/Repository.
+func (g *Gitlab) getProjectID() interface{} {
+	if g.ProjectID != nil {
+		return g.ProjectID
+	}
+	return g.getPID()
 }

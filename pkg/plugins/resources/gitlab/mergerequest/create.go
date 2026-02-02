@@ -72,7 +72,7 @@ func (g *Gitlab) CreateAction(report *reports.Action, resetDescription bool) err
 		}
 
 		_, _, err := g.client.MergeRequests.UpdateMergeRequest(
-			g.getPID(),
+			g.getProjectID(),
 			existingMR.IID,
 			opts,
 			gitlab.WithContext(ctx),
@@ -80,7 +80,7 @@ func (g *Gitlab) CreateAction(report *reports.Action, resetDescription bool) err
 
 		if err != nil {
 			logrus.Warningf("something went wrong updating gitlab merge request %s/%d: %s",
-				g.getPID(), existingMR.IID, err.Error())
+				g.getProjectID(), existingMR.IID, err.Error())
 			return fmt.Errorf("update GitLab merge request: %s", err.Error())
 		}
 
@@ -88,7 +88,7 @@ func (g *Gitlab) CreateAction(report *reports.Action, resetDescription bool) err
 		// c.f. https://docs.gitlab.com/user/project/merge_requests/auto_merge/
 		if g.spec.AutoMerge {
 			if _, _, err = g.client.MergeRequests.AcceptMergeRequest(
-				g.getPID(),
+				g.getProjectID(),
 				existingMR.IID,
 				acceptMergeRequestOptions,
 				gitlab.WithRequestRetry(func(ctx context.Context, resp *http.Response, err error) (bool, error) {
@@ -160,7 +160,7 @@ func (g *Gitlab) CreateAction(report *reports.Action, resetDescription bool) err
 		g.TargetBranch)
 
 	mr, resp, err := g.client.MergeRequests.CreateMergeRequest(
-		g.getPID(),
+		g.getProjectID(),
 		opts,
 		gitlab.WithContext(ctx),
 	)
@@ -181,7 +181,7 @@ func (g *Gitlab) CreateAction(report *reports.Action, resetDescription bool) err
 	// c.f. https://docs.gitlab.com/user/project/merge_requests/auto_merge/
 	if g.spec.AutoMerge {
 		if _, _, err = g.client.MergeRequests.AcceptMergeRequest(
-			g.getPID(),
+			g.getProjectID(),
 			mr.IID,
 			acceptMergeRequestOptions,
 

@@ -35,6 +35,13 @@ type Spec struct {
 	// remark:
 	// 		unless you know what you are doing, you shouldn't set this value and rely on the scmid to provide the sane default.
 	Repository string `yaml:",omitempty"`
+	// "projectid" defines the GitLab project ID directly.
+	//
+	// remark:
+	// 		If set, it takes precedence over Owner/Repository.
+	// 		This is useful when you want to use project ID (integer) instead of owner/repository path.
+	// 		Can be an integer (e.g., 12345) or a string (e.g., "namespace/project").
+	ProjectID interface{} `yaml:",omitempty"`
 	// "title" defines the GitLab mergerequest title
 	//
 	// default:
